@@ -84,11 +84,11 @@ systemctl daemon-reload
 systemctl enable tomcat
 systemctl start tomcat
 
-mkdir -p ~bn/.bashrc.d
+mkdir -p ~$SUDO_USER/.bashrc.d
 
 echo "alias tm='sudo -u tomcat'
-alias tmb='sudo -u tomcat bash'" >~bn/.bashrc.d/common
+alias tmb='sudo -u tomcat bash'" >~$SUDO_USER/.bashrc.d/common
 
-chown -R bn:bn ~bn/.bashrc.d
+chown -R $SUDO_USER: ~$SUDO_USER/.bashrc.d
 
 printf "\n#### FINISHED CONFIG : Tomcat\n\n"

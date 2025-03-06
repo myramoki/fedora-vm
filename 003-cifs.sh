@@ -24,7 +24,7 @@ if [[ -n $respDest ]]; then
 
     printf ".. setup fstab\n"
 
-    printf "%s /mnt/shared cifs credentials=/etc/cifs-creds/shared,uid=%s,gid=%s 0 0\n" $respDest "$(id -u bn)" "$(id -g bn)" >> /etc/fstab
+    printf "%s /mnt/shared cifs credentials=/etc/cifs-creds/shared,uid=%s,gid=%s 0 0\n" $respDest "$(id -u $SUDO_USER)" "$(id -g $SUDO_USER)" >> /etc/fstab
 
     systemctl daemon-reload
 
