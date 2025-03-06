@@ -7,8 +7,9 @@ chown bn: ~bn/.gitconfig
 
 printf "#- fetch ssh keys\n"
 
-curl -sL -o /tmp/ssh-keys https://raw.githubusercontent.com/myramoki/ubuntu-vm/main/biznuvo-server-keys.tar.xz.gpg
-gpg -d /tmp/ssh-keys | tar -J -tvf - -C ~bn/.ssh/
+sshkeystempfile=$(mktemp tmp.dl.sshkeys.XXXXXXXXXX)
+curl -sL -o $sshkeystempfile https://raw.githubusercontent.com/myramoki/fedora-vm/main/biznuvo-server-keys.tar.xz.gpg
+gpg -d $sshkeystempfile | tar -J -tvf - -C ~bn/.ssh/
 
 printf "#- configure ssh config\n"
 
