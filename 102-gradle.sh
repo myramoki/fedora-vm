@@ -10,7 +10,7 @@ fi
 
 printf ".. fetch gradle\n"
 
-gradletempzip=$(mktemp tmp.dl.gradle.XXXXXXXXXX)
+gradletempzip=$(mktemp /tmp/tmp.dl.gradle.XXXXXXXXXX)
 curl -sL -o $gradletempzip https://services.gradle.org/distributions/gradle-$respGradleVersion-bin.zip
 unzip $gradletempzip -d /opt
 

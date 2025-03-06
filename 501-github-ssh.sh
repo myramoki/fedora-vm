@@ -9,7 +9,7 @@ printf "#- fetch ssh keys\n"
 
 mkdir -p ~$SUDO_USER/.ssh
 
-sshkeystempfile=$(mktemp tmp.dl.sshkeys.XXXXXXXXXX)
+sshkeystempfile=$(mktemp /tmp/tmp.dl.sshkeys.XXXXXXXXXX)
 curl -sL -o $sshkeystempfile https://raw.githubusercontent.com/myramoki/fedora-vm/main/biznuvo-server-keys.tar.xz.gpg
 gpg -d $sshkeystempfile | tar -J -tvf - -C ~$SUDO_USER/.ssh
 
