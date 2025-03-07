@@ -1,6 +1,6 @@
 printf "\n#### BEGIN CONFIG : Java\n\n"
 
-dnf install -y -q java-1.8.0-openjdk-headless
+dnf install -y -q java-1.8.0-openjdk-devel
 
 printf "export JAVA_HOME=%s\n" $(realpath $(which java) | sed 's#/jre/.*##') > /etc/profile.d/java.sh
 
