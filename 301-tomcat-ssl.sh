@@ -48,7 +48,7 @@ systemctl restart tomcat
 
 printf "#- setup firewall\n"
 
-ufw allow http
-ufw allow https
+firewall-cmd --add-service=https --permanent
+firewall-cmd --add-service=http --permanent
 
 printf "\n#### FINISHED CONFIG : Tomcat SSL\n\n"
