@@ -51,7 +51,7 @@ User=tomcat
 Group=tomcat
 UMask=0022
 
-Environment="JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64"
+Environment="JAVA_HOME=%s"
 Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:///dev/urandom"
 Environment="CATALINA_BASE=/opt/tomcat"
 Environment="CATALINA_HOME=/opt/tomcat"
@@ -66,7 +66,7 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
-' > /etc/systemd/system/tomcat.service
+' $(realpath $(which java) | sed 's#/jre/.*##') > /etc/systemd/system/tomcat.service
 
 printf "#- configure tomcat\n"
 
