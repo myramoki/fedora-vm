@@ -14,7 +14,7 @@ fi
 
 printf ".. get tomcat port and ssl libs\n"
 
-dnf install -y -q authbind libtcnative-1
+dnf install -y -q authbind tomcat-native
 
 printf ".. add tomcat users\n"
 
@@ -86,8 +86,9 @@ systemctl start tomcat
 
 mkdir -p ~$SUDO_USER/.bashrc.d
 
-echo "alias tm='sudo -u tomcat'
-alias tmb='sudo -u tomcat bash'" >~$SUDO_USER/.bashrc.d/common
+printf "alias tm='sudo -u tomcat'
+alias tmb='sudo -u tomcat bash'
+" >~$SUDO_USER/.bashrc.d/common
 
 chown -R $SUDO_USER: ~$SUDO_USER/.bashrc.d
 
