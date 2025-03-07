@@ -20,9 +20,7 @@ ln -s gradle-$respGradleVersion gradle
 
 printf ".. setup environment\n"
 
-mkdir -p /etc/environment.d
-
-printf 'GRADLE_HOME=/opt/gradle\nPATH=$PATH:/opt/gradle/bin' > /etc/environment.d/102-gradle.conf
+printf 'GRADLE_HOME=/opt/gradle\nPATH=$PATH:/opt/gradle/bin\n' > /etc/profile.d/gradle.sh
 
 sed -i 's#/snap/bin#/snap/bin:/opt/gradle/bin#' /etc/sudoers
 
