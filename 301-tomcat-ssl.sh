@@ -2,7 +2,7 @@ printf "\n#### BEGIN CONFIG : Tomcat SSL\n\n"
 
 printf "#- fetch JKS\n"
 
-curl -sL -o /opt/tomcat/conf/localhost.jks https://raw.githubusercontent.com/myramoki/ubuntu-vm/main/localhost.jks
+curl -sL -o /opt/tomcat/conf/localhost.jks https://raw.githubusercontent.com/myramoki/fedora-vm/main/localhost.jks
 chown tomcat:tomcat /opt/tomcat/conf/localhost.jks
 
 printf "#- configure tomcat\n"
