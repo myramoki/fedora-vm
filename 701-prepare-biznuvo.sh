@@ -1,4 +1,4 @@
-apt-get -y -qq at
+dnf install -y -q at
 
 mkdir -p /opt/biznuvo
 chown tomcat: /opt/biznuvo
