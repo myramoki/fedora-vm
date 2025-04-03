@@ -1,7 +1,5 @@
 printf "\n#### BEGIN CONFIG : Github SSH Keys\n\n"
 
-dnf install -y -q git
-
 printf "#- fetch ssh keys\n"
 
 mkdir -p $SUDO_USER_HOME/.ssh
