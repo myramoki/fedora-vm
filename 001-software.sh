@@ -1,7 +1,5 @@
 printf "\n#### BEGIN CONFIG : Software\n\n"
 
-fwupdmgr -y --no-reboot-check upgrade
-
 dnf upgrade -y
 dnf install -y -q vim stow git at
 
