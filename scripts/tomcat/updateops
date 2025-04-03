@@ -1,0 +1,14 @@
+#!/bin/bash
+
+tb=$(find /mnt/shared -name 'pg-*.tgz' -printf "%T@ %p\n" | sort -nr | head -1 | cut -d\  -f2)
+printf "Processing %s\n" $tb
+
+cd /opt/biznuvo
+tar xvf $tb
+tar xvf /mnt/shared/app-development#design#operations.tgz
+
+cd /opt/biznuvo/installation_archives
+./install-ui.sh
+
+cd /opt/biznuvo/app-development#design#operations
+./upgrade-operations.sh --config=skip

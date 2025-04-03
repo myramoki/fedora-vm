@@ -3,8 +3,13 @@ GITBASIC="
 	$GITDIR/001-software.sh \
 	$GITDIR/002-network.sh \
 	$GITDIR/003-cifs.sh \
+	$GITDIR/099-misc.sh \
 	$GITDIR/999-pause.sh \
 "
+export GITDIR
+
+SUDO_USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
+export SUDO_USER_HOME
 
 echo "
 ##

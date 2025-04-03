@@ -1,0 +1,11 @@
+#!/bin/bash
+
+tb=$(find /tmp -name 'pg-*.tgz' -printf "%T@ %p\n" | sort -nr | head -1 | cut -d\  -f2)
+printf "Processing %s\n" $tb
+
+cd /opt/biznuvo
+tar xvf $tb
+
+cd /opt/biznuvo/installation_archives
+./install-ui.sh
+./upgrade-designer.sh --config=skip

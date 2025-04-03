@@ -34,6 +34,7 @@ curl -sL "https://archive.apache.org/dist/tomcat/tomcat-9/v$respTomcatVersion/bi
 		--strip-components=1 \
 		--exclude='*/webapps/examples' --exclude='*/webapps/docs'
 
+mkdir /opt/tomcat/.local/bin
 chown -R tomcat:tomcat /opt/tomcat/
 chmod -R u+x /opt/tomcat/bin
 chmod -R go+rX /opt/tomcat
@@ -84,14 +85,7 @@ systemctl daemon-reload
 systemctl enable tomcat
 systemctl start tomcat
 
-sudouserhome=$(getent passwd $SUDO_USER | cut -d: -f6)
-
-mkdir -p $sudouserhome/.bashrc.d
-
-printf "alias tm='sudo -u tomcat'
-alias tmb='sudo -u tomcat bash'
-" >$sudouserhome/.bashrc.d/common
-
-chown -R $SUDO_USER: $sudouserhome/.bashrc.d
+cd /opt/tomcat/.local/bin
+curl -O $GITDIR/scripts/tomcat/updatedes $GITDIR/scripts/tomcat/updateops
 
 printf "\n#### FINISHED CONFIG : Tomcat\n\n"
