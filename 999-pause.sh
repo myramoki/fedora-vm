@@ -1,1 +1,1 @@
-read -t 10 -p "Press ENTER to continue" resp
+read -t 5 -p "Press ENTER to continue"

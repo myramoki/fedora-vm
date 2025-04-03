@@ -103,6 +103,6 @@ if [ -e /tmp/dofinal ]; then
 fi
 
 if [ -e /tmp/doreboot ]; then
-    read -t 10 -p "Press ENTER before reboot" resp
+    read -t 5 -p "Press ENTER before reboot"
 	reboot
 fi
