@@ -3,6 +3,7 @@ GITBASIC="
 	$GITDIR/001-software.sh \
 	$GITDIR/002-network.sh \
 	$GITDIR/003-cifs.sh \
+	$GITDIR/090-user.sh \
 	$GITDIR/099-misc.sh \
 	$GITDIR/999-pause.sh \
 "
