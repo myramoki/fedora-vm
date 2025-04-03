@@ -12,6 +12,11 @@ export GITDIR
 SUDO_USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
 export SUDO_USER_HOME
 
+DEFAULT_GRADLE_VERSION=8.8
+export DEFAULT_GRADLE_VERSION
+DEFAULT_TOMCAT_VERSION=9.0.100
+export DEFAULT_TOMCAT_VERSION
+
 echo "
 ##
 ## Choose which setup you want to run:

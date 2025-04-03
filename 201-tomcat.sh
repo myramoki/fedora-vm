@@ -4,8 +4,6 @@
 
 printf "\n#### BEGIN CONFIG : Tomcat\n\n"
 
-DEFAULT_TOMCAT_VERSION=9.0.100
-
 read -t 5 -p "?? Version of Tomcat to install [$DEFAULT_TOMCAT_VERSION] " respTomcatVersion
 
 if [[ -z $respTomcatVersion ]]; then
