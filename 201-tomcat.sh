@@ -39,6 +39,9 @@ chown -R tomcat:tomcat /opt/tomcat/
 chmod -R u+x /opt/tomcat/bin
 chmod -R go+rX /opt/tomcat
 
+cd /opt/tomcat/.local/bin
+sudo -u tomcat curl -O $GITDIR/scripts/tomcat/updatedes -O $GITDIR/scripts/tomcat/updateops
+
 printf "#- setup systemctl for tomcat\n"
 
 printf '[Unit]
@@ -84,8 +87,5 @@ sed -i \
 systemctl daemon-reload
 systemctl enable tomcat
 systemctl start tomcat
-
-cd /opt/tomcat/.local/bin
-curl -O $GITDIR/scripts/tomcat/updatedes $GITDIR/scripts/tomcat/updateops
 
 printf "\n#### FINISHED CONFIG : Tomcat\n\n"
