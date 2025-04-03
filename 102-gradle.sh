@@ -2,7 +2,7 @@ printf "\n#### BEGIN CONFIG : Gradle\n\n"
 
 DEFAULT_GRADLE_VERSION=8.8
 
-read -p "?? Version of Gradle to install [$DEFAULT_GRADLE_VERSION] " respGradleVersion
+read -t 7 -p "?? Version of Gradle to install [$DEFAULT_GRADLE_VERSION] " respGradleVersion
 
 if [[ -z $respGradleVersion ]]; then
 	respGradleVersion=$DEFAULT_GRADLE_VERSION

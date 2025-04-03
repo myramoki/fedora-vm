@@ -6,7 +6,7 @@ printf "\n#### BEGIN CONFIG : Tomcat\n\n"
 
 DEFAULT_TOMCAT_VERSION=9.0.100
 
-read -p "?? Version of Tomcat to install [$DEFAULT_TOMCAT_VERSION] " respTomcatVersion
+read -t 5 -p "?? Version of Tomcat to install [$DEFAULT_TOMCAT_VERSION] " respTomcatVersion
 
 if [[ -z $respTomcatVersion ]]; then
     respTomcatVersion=$DEFAULT_TOMCAT_VERSION
@@ -34,7 +34,7 @@ curl -sL "https://archive.apache.org/dist/tomcat/tomcat-9/v$respTomcatVersion/bi
 		--strip-components=1 \
 		--exclude='*/webapps/examples' --exclude='*/webapps/docs'
 
-mkdir /opt/tomcat/.local/bin
+mkdir -p /opt/tomcat/.local/bin
 chown -R tomcat:tomcat /opt/tomcat/
 chmod -R u+x /opt/tomcat/bin
 chmod -R go+rX /opt/tomcat
