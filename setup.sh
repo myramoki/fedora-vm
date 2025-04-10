@@ -1,4 +1,4 @@
-GITDIR="https://raw.githubusercontent.com/myramoki/fedora-vm/main"
+GITDIR="https://raw.githubusercontent.com/myramoki/fedora-vm/java24"
 export GITDIR
 
 SUDO_USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
