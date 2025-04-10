@@ -39,6 +39,7 @@ chmod -R go+rX /opt/tomcat
 
 cd /opt/tomcat/.local/bin
 sudo -u tomcat curl -O $GITDIR/scripts/tomcat/updatedes -O $GITDIR/scripts/tomcat/updateops
+sudo -u tomcat chmod +x $GITDIR/scripts/tomcat/updatedes $GITDIR/scripts/tomcat/updateops
 
 printf "#- setup systemctl for tomcat\n"
 
