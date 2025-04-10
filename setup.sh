@@ -1,12 +1,4 @@
 GITDIR="https://raw.githubusercontent.com/myramoki/fedora-vm/main"
-GITBASIC="
-	$GITDIR/001-software.sh \
-	$GITDIR/002-network.sh \
-	$GITDIR/003-cifs.sh \
-	$GITDIR/090-user.sh \
-	$GITDIR/099-misc.sh \
-	$GITDIR/999-pause.sh \
-"
 export GITDIR
 
 SUDO_USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
@@ -21,84 +13,93 @@ echo "
 ##
 ## Choose which setup you want to run:
 ##
-##   s - Basic starter setup [default]
-##   b - Builder setup (Java, Gradle and SSH Keys)
-##   t - Basic Tomcat setup with Java
+##   s - Starter setup
+##   j - Java & Gradle
+##   b - Build setup
+##   t - Tomcat
 ##   z - Biznuvo setup
+##   a - All
 ##
 "
 
 read -p "?? Select setup type: [sbtz] " respType
 
+_basic() {
+	printf "%s\n" $GITDIR/001-software.sh \
+		$GITDIR/002-network.sh \
+		$GITDIR/003-cifs.sh \
+		$GITDIR/090-user.sh \
+		$GITDIR/099-misc.sh
+}
+
+_java() {
+	printf "%s\n" $GITDIR/101-java.sh \
+		$GITDIR/102-gradle.sh
+}
+
+_builder() {
+	printf "%s\n" $GITDIR/201-github-ssh.sh
+}
+
+_tomcat() {
+	printf "%s\n" $GITDIR/301-tomcat.sh
+}
+
+_biznuvo() {
+	printf "%s\n" $GITDIR/401-tomcat-ssl.sh \
+		$GITDIR/401-prepare-biznuvo.sh
+}
+
 if [ -n "$respType" ]; then
 	case $respType in
-	b)
-		echo "# Processing setup-builder"
-		sh -c "$(curl $GITBASIC \
-			$GITDIR/101-java.sh \
-			$GITDIR/102-gradle.sh \
-			$GITDIR/501-github-ssh.sh \
-		)"
+	s)
+		echo "# Processing Starter setup"
+		sh -c "$(curl $(_basic))"
 		;;
 	
+	j)
+		echo "# Processing Java & Gradle"
+		sh -c "$(curl $(_basic) $(_java))"
+		;;
+
+	J)
+		echo "# Processing Java & Gradle [only]"
+		sh -c "$(curl $(_java))"
+		;;
+
+	b)
+		echo "# Processing Build setup"
+		sh -c "$(curl $(_basic) $(_java) $(_builder))"
+		;;
+
 	B)
-		echo "# Processing setup-builder"
-		sh -c "$(curl \
-			$GITDIR/101-java.sh \
-			$GITDIR/102-gradle.sh \
-			$GITDIR/501-github-ssh.sh \
-		)"
+		echo "# Processing Build setup [only]"
+		sh -c "$(curl $(_builder))"
 		;;
 
 	t)
-		echo "# Processing setup-tomcat"
-		sh -c "$(curl $GITBASIC \
-			$GITDIR/101-java.sh \
-			$GITDIR/102-gradle.sh \
-        	$GITDIR/999-pause.sh \
-			$GITDIR/201-tomcat.sh \
-		)"
+		echo "# Processing Tomcat"
+		sh -c "$(curl $(_basic) $(_java) $(_tomcat))"
 		;;
 
 	T)
-		echo "# Processing setup-tomcat"
-		sh -c "$(curl \
-			$GITDIR/101-java.sh \
-			$GITDIR/102-gradle.sh \
-        	$GITDIR/999-pause.sh \
-			$GITDIR/201-tomcat.sh \
-		)"
+		echo "# Processing Tomcat [only]"
+		sh -c "$(curl $(_tomcat))"
 		;;
 
 	z)
-		echo "# Processing setup-biznuvo"
-		sh -c "$(curl $GITBASIC \
-			$GITDIR/101-java.sh \
-			$GITDIR/102-gradle.sh \
-        	$GITDIR/999-pause.sh \
-			$GITDIR/201-tomcat.sh \
-			$GITDIR/301-tomcat-ssl.sh \
-        	$GITDIR/999-pause.sh \
-			$GITDIR/701-prepare-biznuvo.sh \
-		)"
+		echo "# Processing Biznuvo setup"
+		sh -c "$(curl $(_basic) $(_java) $(_tomcat) $(_biznuvo))"
 		;;
 
 	Z)
-		echo "# Processing setup-biznuvo"
-		sh -c "$(curl \
-			$GITDIR/101-java.sh \
-			$GITDIR/102-gradle.sh \
-        	$GITDIR/999-pause.sh \
-			$GITDIR/201-tomcat.sh \
-			$GITDIR/301-tomcat-ssl.sh \
-        	$GITDIR/999-pause.sh \
-			$GITDIR/701-prepare-biznuvo.sh \
-		)"
+		echo "# Processing Biznuvo setup [only]"
+		sh -c "$(curl $(_biznuvo))"
 		;;
 
-	*)
-		echo "# Processing setup-basic"
-		sh -c "$(curl $GITBASIC)"
+	a)
+		echo "# Processing Biznuvo setup"
+		sh -c "$(curl $(_basic) $(_java) $(_builder) $(_tomcat) $(_biznuvo))"
 		;;
 	esac
 fi
