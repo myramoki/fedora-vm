@@ -56,6 +56,7 @@ UMask=0022
 
 Environment="JAVA_HOME=%s"
 Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:///dev/urandom"
+#Environment="JAVA_OPTS=-Djava.awt.headless=true -Djava.security.egd=file:///dev/urandom -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"
 Environment="CATALINA_BASE=/opt/tomcat"
 Environment="CATALINA_HOME=/opt/tomcat"
 Environment="CATALINA_PID=/opt/tomcat/temp/tomcat.pid"
@@ -69,7 +70,7 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
-' $(realpath $(which java) | sed 's#/jre/.*##') > /etc/systemd/system/tomcat.service
+' $(realpath $(which java) | sed 's#/bin/.*##') > /etc/systemd/system/tomcat.service
 
 printf "#- configure tomcat\n"
 
