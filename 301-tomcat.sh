@@ -27,10 +27,8 @@ chown tomcat /etc/authbind/byport/80 /etc/authbind/byport/443
 
 printf ".. fetch tomcat\n"
 
-curl -sL "https://dlcdn.apache.org/tomcat/tomcat-11/v$respTomcatVersion/bin/apache-tomcat-$respTomcatVersion-deployer.tar.gz" \
-	| tar xzvf - -C /opt/tomcat \
-		--strip-components=1 \
-		--exclude='*/webapps/examples' --exclude='*/webapps/docs'
+curl -sL "https://dlcdn.apache.org/tomcat/tomcat-11/v$respTomcatVersion/bin/apache-tomcat-$respTomcatVersion.tar.gz" \
+	| tar xzvf - -C /opt/tomcat --strip-components=1 --exclude='*/webapps/examples' --exclude='*/webapps/docs'
 
 mkdir -p /opt/tomcat/.local/bin
 chown -R tomcat:tomcat /opt/tomcat/
@@ -39,7 +37,7 @@ chmod -R go+rX /opt/tomcat
 
 cd /opt/tomcat/.local/bin
 sudo -u tomcat curl -O $GITDIR/scripts/tomcat/updatedes -O $GITDIR/scripts/tomcat/updateops
-sudo -u tomcat chmod +x $GITDIR/scripts/tomcat/updatedes $GITDIR/scripts/tomcat/updateops
+sudo -u tomcat chmod +x /opt/tomcat/.local/bin/*
 
 printf "#- setup systemctl for tomcat\n"
 
