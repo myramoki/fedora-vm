@@ -47,7 +47,7 @@ _tomcat() {
 
 _biznuvo() {
 	printf "%s\n" $GITDIR/401-tomcat-ssl.sh \
-		$GITDIR/401-prepare-biznuvo.sh
+		$GITDIR/402-prepare-biznuvo.sh
 }
 
 if [ -n "$respType" ]; then
