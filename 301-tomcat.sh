@@ -36,8 +36,7 @@ chown tomcat /etc/authbind/byport/80 /etc/authbind/byport/443
 
 printf ".. fetch tomcat\n"
 
-curl -sL "https://dlcdn.apache.org/tomcat/tomcat-11/v$respTomcatVersion/bin/apache-tomcat-$respTomcatVersion.tar.gz" \
-	| tar xzvf - -C /opt/tomcat --strip-components=1 --exclude='*/webapps/examples' --exclude='*/webapps/docs'
+curl -sL $tomcatDownloadUrl | tar xzvf - -C /opt/tomcat --strip-components=1 --exclude='*/webapps/examples' --exclude='*/webapps/docs'
 
 mkdir -p /opt/tomcat/.local/bin
 chown -R tomcat:tomcat /opt/tomcat/
