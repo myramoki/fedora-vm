@@ -3,7 +3,7 @@ printf "\n#### BEGIN CONFIG : Java\n\n"
 read -t 5 -p "?? Version of Java to install 8, 11, 17, 21 [$DEFAULT_JAVA_VERSION] " respJavaVersion
 
 if [[ -z $respJavaVersion ]]; then
-    respJavaVersion=$DEFAULT_TOMCAT_VERSION
+    respJavaVersion=$DEFAULT_JAVA_VERSION
 fi
 
 case $respJavaVersion in
