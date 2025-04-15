@@ -9,7 +9,7 @@ if [[ -n $respDest ]]; then
     read -p "?? Enter password: " respPassword
 
     # already installed so this doesn't do anything, just here to ensure it is
-    dnf install -y -q cifs-utils
+    dnf -y -q install cifs-utils
 
     mkdir -p /mnt/shared
 

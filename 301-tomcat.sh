@@ -21,7 +21,7 @@ tomcatDownloadUrl="https://archive.apache.org/dist/tomcat/tomcat-${downloadVersi
 
 printf ".. get tomcat port and ssl libs\n"
 
-dnf install -y -q authbind tomcat-native
+dnf -y -q install authbind tomcat-native
 
 printf ".. add tomcat users\n"
 
