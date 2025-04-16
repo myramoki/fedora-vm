@@ -76,7 +76,7 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
-' $(realpath $(which java) | sed 's#/bin/.*##') > /etc/systemd/system/tomcat.service
+' $JAVA_HOME > /etc/systemd/system/tomcat.service
 
 printf "#- configure tomcat\n"
 

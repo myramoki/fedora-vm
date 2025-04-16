@@ -17,7 +17,10 @@ esac
 
 dnf -y -q install $downloadVersion
 
-printf "export JAVA_HOME=%s\n" $(realpath $(which java) | sed -r 's#/(jre|bin)/.*##') > /etc/profile.d/java.sh
+JAVA_HOME=$(realpath $(which java) | sed -r 's#/(jre|bin)/.*##')
+export JAVA_HOME
+
+printf "export JAVA_HOME=%s\n" $JAVA_HOME > /etc/profile.d/java.sh
 
 touch /tmp/doreboot
 
