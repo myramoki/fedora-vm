@@ -4,9 +4,9 @@ export GITDIR
 SUDO_USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
 export SUDO_USER_HOME
 
-DEFAULT_JAVA_VERSION=17
+DEFAULT_JAVA_VERSION=21
 DEFAULT_GRADLE_VERSION=8.13
-DEFAULT_TOMCAT_VERSION=10
+DEFAULT_TOMCAT_VERSION=9
 
 export DEFAULT_JAVA_VERSION
 export DEFAULT_GRADLE_VERSION
@@ -14,7 +14,7 @@ export DEFAULT_TOMCAT_VERSION
 
 echo "
 ##
-## Choose which setup you want to run:
+## Choose which setup you want to run, use capital version to incremental install:
 ##
 ##   s - Starter setup
 ##   j - Java & Gradle
