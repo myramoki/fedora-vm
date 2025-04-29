@@ -17,10 +17,14 @@ echo "
 ## Choose which setup you want to run, use capital version to incremental install:
 ##
 ##   s - Starter setup
-##   j - Java & Gradle
-##   b - Build setup
-##   t - Tomcat
-##   z - Biznuvo setup
+##   J - Java [only]
+##   G - Gradle [only]
+##   b - Build setup [starter, java, builder]
+##   B - Build setup [builder only]
+##   t - Tomcat [starter, java, tomcat]
+##   T - Tomcat [tomcat only]
+##   z - Biznuvo setup [starter, java, gradle, tomcat, biznuvo]
+##   Z - Biznuvo setup [biznuvo only]
 ##   a - All
 ##
 "
@@ -36,8 +40,11 @@ _basic() {
 }
 
 _java() {
-	printf "%s\n" $GITDIR/101-java.sh \
-		$GITDIR/102-gradle.sh
+	printf "%s\n" $GITDIR/101-java.sh
+}
+
+_gradle() {
+	printf "%s\n" $GITDIR/102-gradle.sh
 }
 
 _builder() {
@@ -59,15 +66,15 @@ if [ -n "$respType" ]; then
 		echo "# Processing Starter setup"
 		sh -c "$(curl $(_basic))"
 		;;
-	
-	j)
-		echo "# Processing Java & Gradle"
-		sh -c "$(curl $(_basic) $(_java))"
-		;;
 
 	J)
-		echo "# Processing Java & Gradle [only]"
+		echo "# Processing Java [only]"
 		sh -c "$(curl $(_java))"
+		;;
+
+	G)
+		echo "# Processing Gradle [only]"
+		sh -c "$(curl $(_gradle))"
 		;;
 
 	b)
@@ -92,7 +99,7 @@ if [ -n "$respType" ]; then
 
 	z)
 		echo "# Processing Biznuvo setup"
-		sh -c "$(curl $(_basic) $(_java) $(_tomcat) $(_biznuvo))"
+		sh -c "$(curl $(_basic) $(_java) $(_gradle) $(_tomcat) $(_biznuvo))"
 		;;
 
 	Z)
@@ -102,7 +109,7 @@ if [ -n "$respType" ]; then
 
 	a)
 		echo "# Processing Biznuvo setup"
-		sh -c "$(curl $(_basic) $(_java) $(_builder) $(_tomcat) $(_biznuvo))"
+		sh -c "$(curl $(_basic) $(_java) $(_gradle) $(_builder) $(_tomcat) $(_biznuvo))"
 		;;
 	esac
 fi
