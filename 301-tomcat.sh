@@ -47,6 +47,13 @@ cd /opt/tomcat/.local/bin
 sudo -u tomcat curl -O $GITDIR/scripts/tomcat/updatedes -O $GITDIR/scripts/tomcat/updateops
 sudo -u tomcat chmod +x /opt/tomcat/.local/bin/*
 
+cd /opt/tomcat
+sudo -u tomcat git clone https://github.com/myramoki/dotfiles-fedora.git .dotfiles
+
+cd /opt/tomcat/.dotfiles
+sudo -u tomcat stow --adopt .
+sudo -u tomcat git reset --hard
+
 printf "#- setup systemctl for tomcat\n"
 
 printf '[Unit]
