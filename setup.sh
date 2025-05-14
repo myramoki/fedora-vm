@@ -79,7 +79,7 @@ if [ -n "$respType" ]; then
 
 	b)
 		echo "# Processing Build setup"
-		sh -c "$(curl $(_basic) $(_java) $(_builder))"
+		sh -c "$(curl $(_basic) $(_java) $(_gradle) $(_builder))"
 		;;
 
 	B)
