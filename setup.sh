@@ -21,6 +21,7 @@ echo "
 ##   G - Gradle [only]
 ##   b - Build setup [starter, java, builder]
 ##   B - Build setup [builder only]
+##   bm - Multi-java Build setup [starter, java-multi, builder]
 ##   t - Tomcat [starter, java, tomcat]
 ##   T - Tomcat [tomcat only]
 ##   z - Biznuvo setup [starter, java, gradle, tomcat, biznuvo]
@@ -41,6 +42,10 @@ _basic() {
 
 _java() {
 	printf "%s\n" $GITDIR/101-java.sh
+}
+
+_java_multi() {
+	printf "%s\n" $GITDIR/111-java-multi.sh
 }
 
 _gradle() {
@@ -79,12 +84,17 @@ if [ -n "$respType" ]; then
 
 	b)
 		echo "# Processing Build setup"
-		sh -c "$(curl $(_basic) $(_java) $(_gradle) $(_builder))"
+		sh -c "$(curl $(_basic) $(_java) $(_builder))"
 		;;
 
 	B)
 		echo "# Processing Build setup [only]"
 		sh -c "$(curl $(_builder))"
+		;;
+
+	bm)
+		echo "# Processing Multi-Java Build setup"
+		sh -c "$(curl $(_basic) $(_java_multi) $(_builder))"
 		;;
 
 	t)
