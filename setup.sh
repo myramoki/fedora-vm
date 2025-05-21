@@ -65,61 +65,59 @@ _biznuvo() {
 		$GITDIR/402-prepare-biznuvo.sh
 }
 
+_automation() {
+	printf "%s\n" $GITDIR/501-sftp.sh \
+		$GITDIR/502-build-automation.shs
+}
+
 if [ -n "$respType" ]; then
 	case $respType in
-	s)
-		echo "# Processing Starter setup"
+	s)	echo "# Processing Starter setup"
 		sh -c "$(curl $(_basic))"
 		;;
 
-	J)
-		echo "# Processing Java [only]"
+	J)	echo "# Processing Java [only]"
 		sh -c "$(curl $(_java))"
 		;;
 
-	G)
-		echo "# Processing Gradle [only]"
+	G)	echo "# Processing Gradle [only]"
 		sh -c "$(curl $(_gradle))"
 		;;
 
-	b)
-		echo "# Processing Build setup"
+	b)	echo "# Processing Build setup"
 		sh -c "$(curl $(_basic) $(_java) $(_builder))"
 		;;
 
-	B)
-		echo "# Processing Build setup [only]"
+	B)	echo "# Processing Build setup [only]"
 		sh -c "$(curl $(_builder))"
 		;;
 
-	bm)
-		echo "# Processing Multi-Java Build setup"
+	bm)	echo "# Processing Multi-Java Build setup"
 		sh -c "$(curl $(_basic) $(_java_multi) $(_builder))"
 		;;
 
-	t)
-		echo "# Processing Tomcat"
+	t)	echo "# Processing Tomcat"
 		sh -c "$(curl $(_basic) $(_java) $(_tomcat))"
 		;;
 
-	T)
-		echo "# Processing Tomcat [only]"
+	T)	echo "# Processing Tomcat [only]"
 		sh -c "$(curl $(_tomcat))"
 		;;
 
-	z)
-		echo "# Processing Biznuvo setup"
+	z)	echo "# Processing Biznuvo setup"
 		sh -c "$(curl $(_basic) $(_java) $(_gradle) $(_tomcat) $(_biznuvo))"
 		;;
 
-	Z)
-		echo "# Processing Biznuvo setup [only]"
+	Z)	echo "# Processing Biznuvo setup [only]"
 		sh -c "$(curl $(_biznuvo))"
 		;;
 
-	a)
-		echo "# Processing Biznuvo setup"
+	a)	echo "# Processing Biznuvo setup"
 		sh -c "$(curl $(_basic) $(_java) $(_gradle) $(_builder) $(_tomcat) $(_biznuvo))"
+		;;
+
+	A)	echo "# Automation"
+		sh -c "$(curl $(_automation))"
 		;;
 	esac
 fi
