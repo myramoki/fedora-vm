@@ -19,6 +19,7 @@ BASE=$(git merge-base @ "$UPSTREAM")
 
 if [ $LOCAL = $REMOTE ]; then
 	log "No changes detected in git"
+	exit 100
 elif [ $LOCAL = $BASE ]; then
 	BUILD_VERSION=$(git rev-parse HEAD)
 	log "Changes detected, building new version: ${BUILD_VERSION}"
@@ -29,4 +30,5 @@ elif [ $REMOTE = $BASE ]; then
 	${SCRIPT_DIR}/build.sh ${JAVA}
 else
 	log "Git is diverged, this is unexpected"
+	exit 1
 fi

@@ -4,79 +4,91 @@ _githash() {
     git rev-parse --short HEAD
 }
 
-_latestbuild() {
-    find build -name "biznuvo-install"'*' -printf "%T@ %p\n" | sort -nr | head -1 | cut -d\  -f2
-}
-
-_gitlog_from() {
-    sed -n '/==== BUILD LOG ====/q;p' ${1}
-}
-
-_buildlog_from() {
-    sed -n '/==== BUILD LOG ====/,$p' ${1} | tail -n +2
-}
-
-NAME=${1}
-BRANCH=${2}
-JAVA=${3:-8}
+BRANCH=${1}
+JAVA=${2:-8}
 
 LOCKFILE="${HOME}/.locks/${NAME}.lock"
+DESTDIR=/var/sftp/biznuvo/downloads
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+mkdir -p ${HOME}/repos
 cd ${HOME}/repos
 
-if [ ! -d "${NAME}" ]; then
-	git clone git@github.com:BizNuvoSuperApp/biznuvo-server-v2.git --branch $BRANCH --single-branch $NAME
-	newbuild=true
+if [ ! -d "${BRANCH}" ]; then
+    git clone git@github.com:BizNuvoSuperApp/biznuvo-server-v2.git --quiet --branch ${BRANCH} --single-branch ${BRANCH} 2>&1 >/dev/null
+    newbuild=true
 fi
 
-if [ ! -d "${NAME}" ]; then
-	printf "Invalid build branch %s @ %s\n" "${NAME}" "${BRANCH}"
-	exit 1
+if [ ! -d "${BRANCH}" ]; then
+    printf "Invalid build branch %s\n" "${BRANCH}"
+    exit 64
 fi
 
-cd ${NAME}
-LOGFILE=$(mktemp)
+cd ${BRANCH}
+
+LOGFILE=$(mktemp cblog.XXXXXXXX)
+LOCK_CONFLICT=250
+NO_BUILD=100
 
 if [ "${newbuild}" == true ]; then
-	flock -n $LOCKFILE ${HOME}/automation/build.sh ${JAVA} > ${LOGFILE}
+    flock -E ${LOCK_CONFLICT} -n $LOCKFILE ${SCRIPT_DIR}/build.sh ${JAVA} > ${LOGFILE}
 else
-	flock -n $LOCKFILE ${HOME}/automation/build-if-changed.sh ${JAVA} > ${LOGFILE}
+    flock -E ${LOCK_CONFLICT} -n $LOCKFILE ${SCRIPT_DIR}/build-if-changed.sh ${JAVA} > ${LOGFILE}
 fi
 
-if [ $? == 0 ]; then
+case ${?} in
+${LOCK_CONFLICT}|${NO_BUILD})
+    exit
+    ;;
+
+0)
+    BUILD_BRANCH=$(echo ${BRANCH} | tr '/' '-')
     BUILD_VERSION=$(_githash)
-    LATEST_BUILD=$(_latestbuild)
+    LATEST_BUILD_PKG=$(find build -name 'biznuvo-install-*' -printf "%T@ %p\n" | sort -nr | head -1 | cut -d\  -f2)
+    BUILD_DATE=$(basename ${LATEST_BUILD_PKG} | sed -e 's/biznuvo-install-//' -e 's/.tgz//')
+    BUILD_LOCATION="biznuvo-${BUILD_BRANCH}-${BUILD_DATE}-${BUILD_VERSION}.tgz"
 
-    mv ${LATEST_BUILD} /var/sftp/biznuvo/downloads/${NAME}-$(basename ${LATEST_BUILD} .tgz)-${BUILD_VERSION}.tgz
+    mv ${LATEST_BUILD_PKG} ${DESTDIR}/${BUILD_LOCATION}
 
-    printf "Subject: Build %s Success
+    (
+        echo "\
+            Subject: Build ${BRANCH} :: SUCCESS
 
-Successfully built: %s
-Commit Hash: %s
+            BUILD SUCCESS
 
-Git Log:
+            Branch: ${BRANCH}
+            Commit: ${BUILD_VERSION}
 
-%s
-" ${BRANCH} ${BRANCH} ${BUILD_VERSION} "$(_gitlog_from ${LOGFILE})"
+            Archive: sftp://something/downloads/${BUILD_LOCATION}
 
-else
+        " | sed 's/^[[:space:]]*//'
+
+        if [ "${newbuild}" != true ]; then
+            sed -n '/==== BUILD LOG ====/q;p' ${LOGFILE}
+        fi
+
+        # cat ${LOGFILE}
+    ) | msmtp buildnotify
+
+    ;;
+
+*)
     BUILD_VERSION=$(_githash)
-    LATEST_BUILD=$(_latestbuild)
 
-    printf "Subject: Build %s Failed
+    (
+        echo "\
+            Subject: Build ${BRANCH} :: FAILURE
 
-Failed build: %s
-Commit Hash: %s
+            BUILD FAILURE
 
-Git Log:
+            Branch: ${BRANCH}
+            Commit: ${BUILD_VERSION}
 
-%s
+        " | sed 's/^[[:space:]]*//'
 
-----
+        cat ${LOGFILE}
+    ) | msmtp buildnotify
 
-Build Log:
-
-%s
-" ${BRANCH} ${BRANCH} ${BUILD_VERSION} "$(_gitlog_from ${LOGFILE})" "$(_buildlog_from ${LOGFILE})"
-
-fi
+    ;;
+esac
