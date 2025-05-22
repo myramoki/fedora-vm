@@ -67,7 +67,7 @@ _biznuvo() {
 
 _automation() {
 	printf "%s\n" $GITDIR/501-sftp.sh \
-		$GITDIR/502-build-automation.shs
+		$GITDIR/502-build-automation.sh
 }
 
 if [ -n "$respType" ]; then
