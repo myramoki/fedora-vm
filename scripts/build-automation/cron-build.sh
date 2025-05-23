@@ -100,3 +100,5 @@ ${EX_LOCK_CONFLICT}|${EX_NO_BUILD})
 
     ;;
 esac
+
+rm ${BUILD_LOGFILE}
