@@ -1,15 +1,26 @@
 #!/bin/bash
 
-_githash() {
+githash() {
     git rev-parse --short HEAD
 }
 
-BRANCH=${1}
-JAVA=${2:-8}
+log() {
+    printf "%s : %s\n" "$(date +%Y/%m/%d-%H:%M:%S)" "${1}" >> ${LOGFILE}
+}
 
-LOCKFILE="${HOME}/.locks/${NAME}.lock"
+export EX_LOCK_CONFLICT=200
+export EX_NO_BUILD=201
+
+# ----
+
+export BRANCH=${1}
+export JAVA_VERSION=${2:-8}
+
+export BRANCH_SIMPLE=$(echo ${BRANCH} | tr '/' '-')
+export LOGFILE="${HOME}/logs/${BRANCH_SIMPLE}.log"
+
+LOCKFILE="${HOME}/.locks/${BRANCH_SIMPLE}.lock"
 DESTDIR=/var/sftp/biznuvo/downloads
-
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 mkdir -p ${HOME}/repos
@@ -21,33 +32,30 @@ if [ ! -d "${BRANCH}" ]; then
 fi
 
 if [ ! -d "${BRANCH}" ]; then
-    printf "Invalid build branch %s\n" "${BRANCH}"
+    log "Invalid build branch ${BRANCH}"
     exit 64
 fi
 
 cd ${BRANCH}
 
-LOGFILE=$(mktemp cblog.XXXXXXXX)
-LOCK_CONFLICT=250
-NO_BUILD=100
+BUILD_LOGFILE=$(mktemp --tmpdir cblog.$(date +%Y%m%d-%H%M%S).XXXXXXXX)
 
-if [ "${newbuild}" == true ]; then
-    flock -E ${LOCK_CONFLICT} -n $LOCKFILE ${SCRIPT_DIR}/build.sh ${JAVA} > ${LOGFILE}
+if [ "${newbuild}" = true ]; then
+    flock -E ${EX_LOCK_CONFLICT} -n ${LOCKFILE} ${SCRIPT_DIR}/build.sh > ${BUILD_LOGFILE}
 else
-    flock -E ${LOCK_CONFLICT} -n $LOCKFILE ${SCRIPT_DIR}/build-if-changed.sh ${JAVA} > ${LOGFILE}
+    flock -E ${EX_LOCK_CONFLICT} -n ${LOCKFILE} ${SCRIPT_DIR}/build-if-changed.sh > ${BUILD_LOGFILE}
 fi
 
 case ${?} in
-${LOCK_CONFLICT}|${NO_BUILD})
+${EX_LOCK_CONFLICT}|${EX_NO_BUILD})
     exit
     ;;
 
 0)
-    BUILD_BRANCH=$(echo ${BRANCH} | tr '/' '-')
-    BUILD_VERSION=$(_githash)
+    BUILD_VERSION=$(githash)
     LATEST_BUILD_PKG=$(find build -name 'biznuvo-install-*' -printf "%T@ %p\n" | sort -nr | head -1 | cut -d\  -f2)
     BUILD_DATE=$(basename ${LATEST_BUILD_PKG} | sed -e 's/biznuvo-install-//' -e 's/.tgz//')
-    BUILD_LOCATION="biznuvo-${BUILD_BRANCH}-${BUILD_DATE}-${BUILD_VERSION}.tgz"
+    BUILD_LOCATION="biznuvo-${BRANCH_SIMPLE}-${BUILD_DATE}-${BUILD_VERSION}.tgz"
 
     mv ${LATEST_BUILD_PKG} ${DESTDIR}/${BUILD_LOCATION}
 
@@ -65,16 +73,16 @@ ${LOCK_CONFLICT}|${NO_BUILD})
         " | sed 's/^[[:space:]]*//'
 
         if [ "${newbuild}" != true ]; then
-            sed -n '/==== BUILD LOG ====/q;p' ${LOGFILE}
+            sed -n '/==== BUILD LOG ====/q;p' ${BUILD_LOGFILE}
         fi
 
-        # cat ${LOGFILE}
+        # cat ${BUILD_LOGFILE}
     ) | msmtp buildnotify
 
     ;;
 
 *)
-    BUILD_VERSION=$(_githash)
+    BUILD_VERSION=$(githash)
 
     (
         echo "\
@@ -87,7 +95,7 @@ ${LOCK_CONFLICT}|${NO_BUILD})
 
         " | sed 's/^[[:space:]]*//'
 
-        cat ${LOGFILE}
+        cat ${BUILD_LOGFILE}
     ) | msmtp buildnotify
 
     ;;

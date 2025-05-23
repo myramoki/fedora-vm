@@ -1,13 +1,18 @@
 #!/bin/bash
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
 log() {
-	printf "%s: %s\n" "$(date --utc +%FT%TZ)" "${1}"
+    printf "%s : %s\n" "$(date +%Y/%m/%d-%H:%M:%S)" "${1}" >> ${LOGFILE}
 }
 
-JAVA=${1}
-UPSTREAM=${2:-'@{u}'}
+output() {
+    printf "%s\n" "${1}"
+}
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+# ----
+
+UPSTREAM=${1:-'@{u}'}
 
 log "Fetching remote repository..."
 
@@ -17,18 +22,17 @@ LOCAL=$(git rev-parse @)
 REMOTE=$(git rev-parse "$UPSTREAM")
 BASE=$(git merge-base @ "$UPSTREAM")
 
-if [ $LOCAL = $REMOTE ]; then
-	log "No changes detected in git"
-	exit 100
-elif [ $LOCAL = $BASE ]; then
-	BUILD_VERSION=$(git rev-parse HEAD)
-	log "Changes detected, building new version: ${BUILD_VERSION}"
-	${SCRIPT_DIR}/build.sh ${JAVA}
-elif [ $REMOTE = $BASE ]; then
-	log "Local changes detched, stashing"
-	git stash
-	${SCRIPT_DIR}/build.sh ${JAVA}
+if [ "${LOCAL}" = "${REMOTE}" ]; then
+    log "No changes detected in git"
+    exit ${EX_NO_BUILD}
+elif [ "${LOCAL}" = "${BASE}" ]; then
+    log "Changes detected, building new version: $(git rev-parse HEAD)"
+    ${SCRIPT_DIR}/build.sh
+elif [ "${REMOTE}" = "${BASE}" ]; then
+    output "Local changes detected, stashing"
+    git stash
+    ${SCRIPT_DIR}/build.sh
 else
-	log "Git is diverged, this is unexpected"
-	exit 1
+    output "Git is diverged, this is unexpected.  Possible force push"
+    exit 1
 fi

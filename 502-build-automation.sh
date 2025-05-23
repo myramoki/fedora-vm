@@ -5,9 +5,9 @@ dnf install -y -q msmtp
 printf "Creating msmtp control files\n"
 
 cd $SUDO_USER_HOME
-curl $GITDIR/scripts/build-automation/.msmtprc | sed "s#aliases #aliases ${SUDO_USER_HOME}#" > .msmtprc
+curl $GITDIR/scripts/build-automation/.msmtprc | sed "s#aliases #aliases ${SUDO_USER_HOME}/#" > .msmtprc
 
-printf "buildnotification: DEST1,DEST2\n" > .msmtprc_aliases
+printf "buildnotify: DEST1\n" > .msmtprc_aliases
 chown -R ${SUDO_USER}: .msmtprc .msmtprc_aliases
 chmod 600 .msmtprc .msmtprc_aliases
 
@@ -21,7 +21,7 @@ curl -O "$GITDIR/scripts/build-automation/{build-if-changed.sh,build.sh,cron-bui
 chown -R $SUDO_USER: $SUDO_USER_HOME/automation
 chmod u+x $SUDO_USER_HOME/automation/*.sh
 
-mkdir $SUDO_USER_HOME/.locks $SUDO_USER_HOME/repos
-chown $SUDO_USER: $SUDO_USER_HOME/.locks $SUDO_USER_HOME/repos
+mkdir $SUDO_USER_HOME/.locks $SUDO_USER_HOME/repos $SUDO_USER_HOME/logs
+chown $SUDO_USER: $SUDO_USER_HOME/.locks $SUDO_USER_HOME/repos $SUDO_USER_HOME/logs
 
 printf "\n#### END CONFIG : Build Automation\n\n"

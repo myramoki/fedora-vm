@@ -21,12 +21,13 @@ echo "
 ##   G - Gradle [only]
 ##   b - Build setup [starter, java, builder]
 ##   B - Build setup [builder only]
-##   bm - Multi-java Build setup [starter, java-multi, builder]
 ##   t - Tomcat [starter, java, tomcat]
 ##   T - Tomcat [tomcat only]
 ##   z - Biznuvo setup [starter, java, gradle, tomcat, biznuvo]
 ##   Z - Biznuvo setup [biznuvo only]
 ##   a - All
+##
+##   A - Automation [starter, multi-java, automation]
 ##
 "
 
@@ -92,10 +93,6 @@ if [ -n "$respType" ]; then
 		sh -c "$(curl $(_builder))"
 		;;
 
-	bm)	echo "# Processing Multi-Java Build setup"
-		sh -c "$(curl $(_basic) $(_java_multi) $(_builder))"
-		;;
-
 	t)	echo "# Processing Tomcat"
 		sh -c "$(curl $(_basic) $(_java) $(_tomcat))"
 		;;
@@ -117,7 +114,7 @@ if [ -n "$respType" ]; then
 		;;
 
 	A)	echo "# Automation"
-		sh -c "$(curl $(_automation))"
+		sh -c "$(curl $(_basic) $(_java_multi) $(_builder) $(_automation))"
 		;;
 	esac
 fi
