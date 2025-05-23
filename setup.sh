@@ -4,7 +4,7 @@ export GITDIR
 SUDO_USER_HOME=$(getent passwd $SUDO_USER | cut -d: -f6)
 export SUDO_USER_HOME
 
-DEFAULT_JAVA_VERSION=21
+DEFAULT_JAVA_VERSION=8
 DEFAULT_GRADLE_VERSION=8.14
 DEFAULT_TOMCAT_VERSION=9
 
@@ -14,7 +14,7 @@ export DEFAULT_TOMCAT_VERSION
 
 echo "
 ##
-## Choose which setup you want to run, use capital version to incremental install:
+## Choose which setup you want to run:
 ##
 ##   s - Starter setup
 ##   J - Java [only]
@@ -26,8 +26,6 @@ echo "
 ##   z - Biznuvo setup [starter, java, gradle, tomcat, biznuvo]
 ##   Z - Biznuvo setup [biznuvo only]
 ##   a - All
-##
-##   A - Automation [starter, multi-java, automation]
 ##
 "
 
@@ -64,11 +62,6 @@ _tomcat() {
 _biznuvo() {
 	printf "%s\n" $GITDIR/401-tomcat-ssl.sh \
 		$GITDIR/402-prepare-biznuvo.sh
-}
-
-_automation() {
-	printf "%s\n" $GITDIR/501-sftp.sh \
-		$GITDIR/502-build-automation.sh
 }
 
 if [ -n "$respType" ]; then
@@ -111,10 +104,6 @@ if [ -n "$respType" ]; then
 
 	a)	echo "# Processing Biznuvo setup"
 		sh -c "$(curl $(_basic) $(_java) $(_gradle) $(_builder) $(_tomcat) $(_biznuvo))"
-		;;
-
-	A)	echo "# Automation"
-		sh -c "$(curl $(_basic) $(_java_multi) $(_builder) $(_automation))"
 		;;
 	esac
 fi

@@ -48,7 +48,7 @@ sudo -u tomcat curl -O $GITDIR/scripts/tomcat/updatedes -O $GITDIR/scripts/tomca
 sudo -u tomcat chmod +x /opt/tomcat/.local/bin/*
 
 cd /opt/tomcat
-sudo -u tomcat git clone https://github.com/myramoki/dotfiles-fedora.git .dotfiles
+sudo -u tomcat git clone https://github.com/myramoki/fedora-dotfiles.git .dotfiles
 
 cd /opt/tomcat/.dotfiles
 sudo -u tomcat stow --adopt .
