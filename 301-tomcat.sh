@@ -4,20 +4,7 @@
 
 printf "\n#### BEGIN CONFIG : Tomcat\n\n"
 
-read -t 5 -p "?? Version of Tomcat to install 9, 10 or 11 [$DEFAULT_TOMCAT_VERSION] " respTomcatVersion
-
-if [[ -z $respTomcatVersion ]]; then
-    respTomcatVersion=$DEFAULT_TOMCAT_VERSION
-fi
-
-case $respTomcatVersion in
-"9")  downloadVersion="9.0.104" ;;
-"10") downloadVersion="10.1.40" ;;
-"11") downloadVersion="11.0.6" ;;
-*) printf "ERR: bad version\n" && exit ;;
-esac
-
-tomcatDownloadUrl="https://archive.apache.org/dist/tomcat/tomcat-${downloadVersion//.*/}/v${downloadVersion}/bin/apache-tomcat-${downloadVersion}.tar.gz"
+tomcatDownloadUrl="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.109/bin/apache-tomcat-9.0.109.tar.gz"
 
 printf ".. get tomcat port and ssl libs\n"
 

@@ -21,16 +21,13 @@ NF != 0 {blank=0}
 
 /<Service name="Catalina">/ {
 	print
-	print "    <Connector port=\"80\" protocol=\"HTTP/1.1\"\n\
-               connectionTimeout=\"20000\"\n\
-               redirectPort=\"443\" />\n\
-\n\
+	print "\n\
     <Connector port=\"443\" protocol=\"org.apache.coyote.http11.Http11NioProtocol\"\n\
                maxThreads=\"150\"\n\
                SSLEnabled=\"true\" scheme=\"https\" secure=\"true\"\n\
                keystoreFile=\"conf/localhost.jks\" keystorePass=\"test@123\" keyAlias=\"server\"\n\
                clientAuth=\"false\"\n\
-               sslProtocol=\"TLSv1.2\" />"
+               sslProtocol=\"TLSv1.2\" />\n"
     next
 }
 
